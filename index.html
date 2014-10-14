@@ -91,7 +91,7 @@
         'horsea', 'seadra', 'goldeen', 'seaking', 'staryu', 'starmie',
         'mrmime', 'scyther', 'jynx', 'electabuzz', 'magmar', 'pinsir', 'tauros',
         'magikarp', 'gyarados', 'lapras', 'ditto', 'eevee', 'vaporeon',
-        'jolteon', 'flareon', 'poryogon', 'omanyte', 'omastar', 'kabuto',
+        'jolteon', 'flareon', 'porygon', 'omanyte', 'omastar', 'kabuto',
         'kabutops', 'aerodactyl', 'snorlax', 'articuno', 'zapdos', 'moltres',
         'dratini', 'dragonair', 'dragonite', 'mewtwo', 'mew'
       ];
@@ -152,7 +152,7 @@
         setTimeout(function() {
           loop();
           timeout();
-        }, (counter  < 1) ? 500 : 4000);
+        }, (counter  < 1) ? 500 : 3000);
       }
       timeout();
 
@@ -190,16 +190,21 @@
         currentPKMN = $('#' + 'pkmnID_' + counter);
         var w = currentPKMN.width();
         var h = currentPKMN.height();
-        currentPKMN.css({bottom: '50%', left: -w});
+        var amount = '48%';
+        var c = counter + 1;
+        if (c == 99 || c == 149)
+          amount = '40%';
+        currentPKMN.css({bottom: amount, left: -w});
         currentPKMN.show();
         currentPKMN.animate({
-          left: "+" + (window.innerWidth / 8)
+          left: "+" + (window.innerWidth / 5 - w/3)
         }, {
             duration: 2200,
             specialEasing: {
               width: 'easeInOutCubic'
             }
           });
+        console.log(counter);
         //currentPKMN.show('slide', { direction: 'left' }, 2000);
 
         // prebuffer next frames
