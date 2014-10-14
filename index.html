@@ -3,7 +3,7 @@
   <title>Bulbashow</title>
   <style type="text/css">
     body {
-      background: #222;
+      background: #77AC98;
       padding: 0 0 0 0;
       margin: 0 0 0 0;
       overflow: hidden;
@@ -74,9 +74,9 @@
         'charizard', 'squirtle', 'wartortle', 'blastoise', 'caterpie',
         'metapod', 'butterfree', 'weedle', 'kakuna', 'beedrill', 'pidgey',
         'pidgeotto', 'pidgeot', 'rattata', 'raticate', 'spearow', 'fearow',
-        'ekans', 'arbok', 'pikachu', 'raichu', 'sandshrew', 'nidoranf', 'nidorina',
-        'nidoqueen', 'nidoranm', 'nidorino', 'nidoking', 'clefairy', 'clefable',
-        'vulpix', 'ninetales', 'jigglypuff', 'wigglytuff', 'zubat' , 'golbat',
+        'ekans', 'arbok', 'pikachu', 'raichu', 'sandshrew', 'sandslash', 'nidoranf',
+        'nidorina', 'nidoqueen', 'nidoranm', 'nidorino', 'nidoking', 'clefairy',
+        'clefable', 'vulpix', 'ninetales', 'jigglypuff', 'wigglytuff', 'zubat' , 'golbat',
         'oddish', 'gloom', 'vileplume', 'paras', 'parasect', 'venonat', 'venomoth',
         'diglett', 'dugtrio', 'meowth', 'persian', 'psyduck', 'golduck', 'mankey',
         'primeape', 'growlithe', 'arcanine', 'poliwag', 'poliwhirl', 'poliwrath',
@@ -92,7 +92,7 @@
         'mrmime', 'scyther', 'jynx', 'electabuzz', 'magmar', 'pinsir', 'tauros',
         'magikarp', 'gyarados', 'lapras', 'ditto', 'eevee', 'vaporeon',
         'jolteon', 'flareon', 'poryogon', 'omanyte', 'omastar', 'kabuto',
-        'kabutops', 'aerodactyl', 'snorlax', 'articuon', 'zapdos', 'moltres',
+        'kabutops', 'aerodactyl', 'snorlax', 'articuno', 'zapdos', 'moltres',
         'dratini', 'dragonair', 'dragonite', 'mewtwo', 'mew'
       ];
 
@@ -146,13 +146,16 @@
       var currentBG = null;
       var currentPKMN = null;
 
+      var firstTime = true;
+
       function timeout() {
         setTimeout(function() {
           loop();
           timeout();
-        }, 4000);
+        }, (counter  < 1) ? 500 : 4000);
       }
       timeout();
+
 
       var counter = -1;
       function loop() {
