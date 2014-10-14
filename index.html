@@ -159,10 +159,9 @@
 
       var max = 151;
       var counter = -1;
+      counter = 147;
       function loop() {
-        if (counter > names.length) {
-          counter -= names.length;
-        }
+
         // BG
         if (currentBG) {
           currentBG.hide('slide', { direction: 'left' }, 1500, function() {
@@ -175,16 +174,16 @@
 
         // PKMN
         if (currentPKMN) {
-          var that = currentPKMN;
           currentPKMN.animate({
             left: "+" + window.innerWidth
           }, {
             duration: 2000,
             specialEasing: {
               width: 'easeInOutCubic'
+            },
+            complete: function() {
+              this.remove();
             }
-          }, function() {
-            that.remove();
           });
         }
 
@@ -205,7 +204,6 @@
               width: 'easeInOutCubic'
             }
           });
-        console.log(counter);
         //currentPKMN.show('slide', { direction: 'left' }, 2000);
 
         // prebuffer next frames
