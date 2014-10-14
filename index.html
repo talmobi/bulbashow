@@ -20,7 +20,7 @@
       margin: 0 0 0 0;
     }
 
-    #bg_slideshow img {
+    #slideshow_bg img {
       z-index: -1;
       width: 100%;
       height: 100%;
@@ -31,7 +31,7 @@
       padding: 0 0 0 0;
     }
 
-    #pkmns_slideshow img {
+    #slideshow_fn img {
       z-index: 100;
       position: absolute;
       overflow: hidden;
@@ -39,12 +39,13 @@
 
     img {
       overflow: hidden;
+      position: absolute;
     }
 
-    #bg_slideshow {
+    #slideshow_bg {
       overflow: hidden;
     }
-    #pkmns_slideshow {
+    #slideshow_fn {
       overflow: hidden;
     }
   </style>
@@ -56,14 +57,12 @@
 </head>
 <body>
 
-
-
   <iframe id="sc-widget" width="100%" height="166" scrolling="no" frameborder="no" src="https://w.soundcloud.com/player/?url=http%3A%2F%2F"></iframe>
 
-  <div id="pkmns_slideshow">
+  <div id="slideshow_fn">
   </div>
 
-  <div id="bg_slideshow">
+  <div id="slideshow_bg">
   </div>
 
   <script type="text/javascript">
@@ -96,21 +95,9 @@
         'dratini', 'dragonair', 'dragonite', 'mewtwo', 'mew'
       ];
 
+      // root dirs for image slides
       var bg_root = 'http://media.pldh.net/gallery/the493/';
       var pkmn_root = 'http://media.pldh.net/dreamworld/';
-
-      var bgs = [
-        'http://media.pldh.net/gallery/the493/bulbasaur.jpg',
-        'http://media.pldh.net/gallery/the493/charmander.jpg',
-        'http://media.pldh.net/gallery/the493/squirtle.jpg'
-      ];
-
-      var pkmn = 'http://media.pldh.net/dreamworld/';
-      var pkmns = [
-        'http://media.pldh.net/dreamworld/001.png',
-        'http://media.pldh.net/dreamworld/004.png',
-        'http://media.pldh.net/dreamworld/007.png'
-      ];
 
       var widgetIframe = $('#sc-widget')[0];
       var widget = SC.Widget( widgetIframe );
@@ -131,49 +118,28 @@
 
       //$('#sc-widget').hide();
 
-      function createImage(src, id) {
-        var img = new Image();
-        img.src = src;
-        img.id = id;
-        img.style.display = 'none';
-        img.style.overflow = 'hidden';
-        return img;
-      }
-
-      var bs = $('#bg_slideshow');
-      var ps = $('#pkmns_slideshow');
-
-      var currentBG = null;
-      var currentPKMN = null;
-
-      var firstTime = true;
-
-      function timeout() {
-        setTimeout(function() {
-          loop();
-          timeout();
-        }, (counter  < 1) ? 500 : 3000);
-      }
-      timeout();
-
+      // slideshow containers
+      var bs = $('#slideshow_bg');
+      var ps = $('#slideshow_fn');
 
       var max = 151;
-      var counter = -1;
-      function loop() {
+      var counter = 0;
 
-        // BG
-        if (currentBG) {
-          currentBG.hide('slide', { direction: 'left' }, 1500, function() {
+      var current = null;
+      var next = null;
+
+      function nextSlide() {
+
+        if (current) {
+          // slide old images out
+
+          current.bg.hide('slide', {
+            direction: 'left'
+          }, 1500, function() {
             this.remove();
           });
-        }
-        
-        currentBG = $('#' + 'bgID_' + counter);
-        currentBG.show('slide', { direction: 'right' }, 1500);
 
-        // PKMN
-        if (currentPKMN) {
-          currentPKMN.animate({
+          current.pkmn.animate({
             left: "+" + window.innerWidth
           }, {
             duration: 2000,
@@ -186,38 +152,76 @@
           });
         }
 
-        currentPKMN = $('#' + 'pkmnID_' + counter);
-        var w = currentPKMN.width();
-        var h = currentPKMN.height();
-        var amount = '48%';
-        var c = counter + 1;
-        if (c == 99 || c == 149)
-          amount = '40%';
-        currentPKMN.css({bottom: amount, left: -w});
-        currentPKMN.show();
-        currentPKMN.animate({
-          left: "+" + (window.innerWidth / 5 - w/3)
-        }, {
+        if (next) {
+          // slide next images into view
+          next.bg.show('slide', {
+            direction: 'right'
+          }, 1500);
+
+          var currentPKMN = next.pkmn;
+          var w = currentPKMN.width();
+          var h = currentPKMN.height();
+          var amount = '45%';
+          var c = counter + 1;
+          if (c == 99 || c == 149)
+            amount = '40%';
+          currentPKMN.css({bottom: amount, left: -w});
+          currentPKMN.show();
+          currentPKMN.animate({
+            left: "+" + (window.innerWidth / 5 - w/3)
+          }, {
             duration: 2200,
             specialEasing: {
               width: 'easeInOutCubic'
             }
           });
-        //currentPKMN.show('slide', { direction: 'left' }, 2000);
+        }
 
-        // prebuffer next frames
-        var img, ahead;
-        ahead = counter + 1;
-        img = createImage( bg_root + names[ahead % max] + ".jpg", 'bgID_' + (ahead % max)  );
-        bs.append(img);
-        img = createImage( pkmn_root + zstr((ahead % max) + 1) + ((ahead % max) + 1) + ".png", 'pkmnID_' + (ahead % max ));
-        ps.append(img);
+        // swaå
+        current = next;
+        next = null;
+
+        // load next imgs
+        var n = counter + 1;
+        if (n > max) {
+          n -= max;
+        }
+        next = {
+          bg: $('<img />', {
+            id: 'bgID_' + (n),
+            src: (bg_root + names[counter % max] + ".jpg"),
+            style: {
+              display: 'none',
+              overfloe: 'hidden'
+            }
+          }),
+          pkmn: $('<img />', {
+            id: 'pkmnID_' + (n),
+            src: (pkmn_root + zstr(n) + n + ".png"),
+            style: {
+              display: 'none',
+              overfloe: 'hidden'
+            }
+          })
+        }
+        // setup next images
+        next.bg.css({overflow: 'hidden', display: 'none'});
+        next.pkmn.css({overflow: 'hidden', display: 'none'});
+        // append them to the page for hidden preloading
+        bs.append(next.bg);
+        ps.append(next.pkmn);
 
         counter++;
-        if (counter > max) {
-          counter = 0;
-        }
-      };
+      }
+
+      // friendly loop to automate slideshow
+      function timeout() {
+        setTimeout(function() {
+          nextSlide();
+          timeout();
+        }, (counter < 1) ? 500 : 3000);
+      }
+      timeout();
 
       function zstr(n) {
         var z = '';
