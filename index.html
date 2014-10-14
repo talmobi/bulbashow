@@ -189,7 +189,8 @@
 
         currentPKMN = $('#' + 'pkmnID_' + counter);
         var w = currentPKMN.width();
-        currentPKMN.css({top: '10%', left: -w});
+        var h = currentPKMN.height();
+        currentPKMN.css({bottom: '50%', left: -w});
         currentPKMN.show();
         currentPKMN.animate({
           left: "+" + (window.innerWidth / 8)
