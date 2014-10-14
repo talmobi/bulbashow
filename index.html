@@ -161,20 +161,25 @@
         }
         // BG
         if (currentBG) {
-          currentBG.hide('slide', { direction: 'left' }, 2000, function() {
+          currentBG.hide('slide', { direction: 'left' }, 1500, function() {
             this.remove();
           });
         }
         
         currentBG = $('#' + 'bgID_' + counter);
-        currentBG.show('slide', { direction: 'right' }, 2000);
+        currentBG.show('slide', { direction: 'right' }, 1500);
 
         // PKMN
         if (currentPKMN) {
           var that = currentPKMN;
           currentPKMN.animate({
             left: "+" + window.innerWidth
-          }, 2000, function() {
+          }, {
+            duration: 2000,
+            specialEasing: {
+              width: 'easeInOutCubic'
+            }
+          }, function() {
             that.remove();
           });
         }
@@ -185,7 +190,12 @@
         currentPKMN.show();
         currentPKMN.animate({
           left: "+" + (window.innerWidth / 8)
-        }, 2200);
+        }, {
+            duration: 2200,
+            specialEasing: {
+              width: 'easeInOutCubic'
+            }
+          });
         //currentPKMN.show('slide', { direction: 'left' }, 2000);
 
         // prebuffer next frames
