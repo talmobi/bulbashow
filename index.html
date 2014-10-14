@@ -6,6 +6,7 @@
       background: #222;
       padding: 0 0 0 0;
       margin: 0 0 0 0;
+      overflow: hidden;
     }
 
     iframe {
@@ -33,6 +34,18 @@
     #pkmns_slideshow img {
       z-index: 100;
       position: absolute;
+      overflow: hidden;
+    }
+
+    img {
+      overflow: hidden;
+    }
+
+    #bg_slideshow {
+      overflow: hidden;
+    }
+    #pkmns_slideshow {
+      overflow: hidden;
     }
   </style>
 
@@ -61,10 +74,10 @@
         'charizard', 'squirtle', 'wartortle', 'blastoise', 'caterpie',
         'metapod', 'butterfree', 'weedle', 'kakuna', 'beedrill', 'pidgey',
         'pidgeotto', 'pidgeot', 'rattata', 'raticate', 'spearow', 'fearow',
-        'ekans', 'arbok', 'pikachu', 'raichu', 'sandshrew', 'nidoran', 'nidorina',
-        'nidoqueen', 'nidoran', 'nidorino', 'nidoking', 'clefairy', 'clefable',
-        'vulpix', 'ninetales', 'jigglypuff', 'wigglypuff', 'zubat' , 'golbat',
-        'oddish', 'gloom', 'vilepule', 'paras', 'parasect', 'venonat', 'venomoth',
+        'ekans', 'arbok', 'pikachu', 'raichu', 'sandshrew', 'nidoranf', 'nidorina',
+        'nidoqueen', 'nidoranm', 'nidorino', 'nidoking', 'clefairy', 'clefable',
+        'vulpix', 'ninetales', 'jigglypuff', 'wigglytuff', 'zubat' , 'golbat',
+        'oddish', 'gloom', 'vileplume', 'paras', 'parasect', 'venonat', 'venomoth',
         'diglett', 'dugtrio', 'meowth', 'persian', 'psyduck', 'golduck', 'mankey',
         'primeape', 'growlithe', 'arcanine', 'poliwag', 'poliwhirl', 'poliwrath',
         'abra', 'kadabra', 'alakazam', 'machop', 'machoke', 'machamp', 'bellsprout',
@@ -106,7 +119,7 @@
 
       widget.load(url, {
         show_artwork: false,
-        auto_play: false,
+        auto_play: true,
         buying: false,
         liking: false,
         download: false,
@@ -116,21 +129,14 @@
         show_user: false
       });
 
-      $('body').css('background-image', 'url(' + bgs[0] + ')' );
-
-      var count = 0;
-      var img = new Image();
-      img.src = pkmns[0];
-      img.id = 'pkmn_id_' + count;
-      img.hidden = true;
-
       //$('#sc-widget').hide();
 
       function createImage(src, id) {
         var img = new Image();
         img.src = src;
         img.id = id;
-        img.hidden = true;
+        img.style.display = 'none';
+        img.style.overflow = 'hidden';
         return img;
       }
 
@@ -140,43 +146,67 @@
       var currentBG = null;
       var currentPKMN = null;
 
-      var counter = 0;
-      setInterval(function() {
+      function timeout() {
+        setTimeout(function() {
+          loop();
+          timeout();
+        }, 4000);
+      }
+      timeout();
+
+      var counter = -1;
+      function loop() {
+        if (counter > names.length) {
+          counter -= names.length;
+        }
         // BG
         if (currentBG) {
           currentBG.hide('slide', { direction: 'left' }, 2000, function() {
             this.remove();
           });
         }
-        var img = createImage( bg_root + names[counter] + ".jpg", 'bgID_' + counter );
+        
+        currentBG = $('#' + 'bgID_' + counter);
+        currentBG.show('slide', { direction: 'right' }, 2000);
+
+        // PKMN
+        if (currentPKMN) {
+          var that = currentPKMN;
+          currentPKMN.animate({
+            left: "+" + window.innerWidth
+          }, 2000, function() {
+            that.remove();
+          });
+        }
+
+        currentPKMN = $('#' + 'pkmnID_' + counter);
+        var w = currentPKMN.width();
+        currentPKMN.css({top: '10%', left: -w});
+        currentPKMN.show();
+        currentPKMN.animate({
+          left: "+" + (window.innerWidth / 8)
+        }, 2200);
+        //currentPKMN.show('slide', { direction: 'left' }, 2000);
+
+        // prebuffer next frames
+        var img, ahead;
+        ahead = counter + 1;
+        img = createImage( bg_root + names[ahead] + ".jpg", 'bgID_' + ahead );
         bs.append(img);
-        currentBG = $('#' + img.id);
-        currentBG.show('slide', { direction: 'right' }, 2000, function() {
-
-          // PKMN
-          if (currentPKMN) {
-            currentPKMN.animate({
-              left: "+" + window.innerWidth
-            }, 3000, function() {
-              this.hide('slide', { direction: 'right' }, 2000, function() {
-                this.remove();
-              });
-            });
-          }
-          var zstr = '';
-          if (counter < 10)
-            zstr += '0';
-          if (counter < 100)
-            zstr += '0';
-          var img = createImage( pkmn_root + zstr + (counter + 1) + ".png", 'pkmnID_' + counter );
-          ps.append(img);
-          currentPKMN = $('#' + img.id);
-          currentPKMN.show('slide', { direction: 'left' }, 3000);
-
-        });
+        img = createImage( pkmn_root + zstr(ahead + 1) + (ahead + 1) + ".png", 'pkmnID_' + ahead );
+        ps.append(img);
 
         counter++;
-      }, 5000);
+      };
+
+      function zstr(n) {
+        var z = '';
+        if (n < 10)
+          z += '0';
+        if (n < 100)
+          z += '0';
+        return z;
+      }
 
     })();
   </script>
