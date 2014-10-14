@@ -157,7 +157,9 @@
       timeout();
 
 
+      var max = 151;
       var counter = -1;
+      counter = 148;
       function loop() {
         if (counter > names.length) {
           counter -= names.length;
@@ -210,12 +212,15 @@
         // prebuffer next frames
         var img, ahead;
         ahead = counter + 1;
-        img = createImage( bg_root + names[ahead] + ".jpg", 'bgID_' + ahead );
+        img = createImage( bg_root + names[ahead % max] + ".jpg", 'bgID_' + (ahead % max)  );
         bs.append(img);
-        img = createImage( pkmn_root + zstr(ahead + 1) + (ahead + 1) + ".png", 'pkmnID_' + ahead );
+        img = createImage( pkmn_root + zstr((ahead % max) + 1) + ((ahead % max) + 1) + ".png", 'pkmnID_' + (ahead % max ));
         ps.append(img);
 
         counter++;
+        if (counter > max) {
+          counter = 0;
+        }
       };
 
       function zstr(n) {
