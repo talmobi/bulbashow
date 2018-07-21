@@ -12,5 +12,5 @@ do
 
   echo "Downloading file... ($URL)"
   curl -s -OL $URL
-  echo "Download Complete! ($FILE)"
+  echo "Download Complete! ($name.jpg)"
 done
