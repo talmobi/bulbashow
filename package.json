@@ -4,6 +4,7 @@
   "description": "TODO",
   "main": "bulbashow.js",
   "scripts": {
+    "watch": "miru -p public -t public/index.html -t public/bundle.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [
@@ -21,6 +22,7 @@
     "email": "talmo.christian@gmail.com"
   },
   "dependencies": {},
-  "devDependencies": {}
+  "devDependencies": {
+    "miru": "~0.11.0"
+  }
 }
-
