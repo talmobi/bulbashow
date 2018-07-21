@@ -38,6 +38,7 @@ var audio = el(
   {
     controls: '',
     autoplay: '',
+    loop: true,
     src: 'assets/national-park-theme-pkmn-crystal.mp3',
     type: 'audio/mpeg'
   }
