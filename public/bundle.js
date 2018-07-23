@@ -225,14 +225,28 @@ function start () {
 }
 
 var started = false
-window.onclick = function ( evt ) {
-  console.log( 'clicked' )
+
+window.onclick = handleClick
+window.ontouchstart = handleTouch
+
+function handleClick ( evt ) {
   evt.preventDefault()
 
   if ( !started ) {
     started = true
     timeout()
     audio.play()
+    start()
+  }
+}
+
+function handleTouch ( evt ) {
+  evt.preventDefault()
+
+  if ( !started ) {
+    started = true
+    timeout()
+    // audio.play() // don't pay audio on mobile
     start()
   }
 }
